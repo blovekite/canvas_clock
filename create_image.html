@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <style media="screen">
+    .main_part{
+      width: 300px;
+      height: 100%;
+      float: left;
+    }
+    .image{
+      width: 200px;
+      overflow: hidden;
+    }
+    .ball{
+      border: 1px solid gray;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      float:left;
+      margin: 1px;
+    }
+    .onclick{
+      background-color: rgba(0, 255, 0, 0.5);
+    }
+    #refresh,#save,#copy{
+      display: inline-block;
+      width: 48px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 20px 0;
+    }
+    #refresh{
+      background-color: rgba(199, 255, 0, 0.5);
+    }
+    #save{
+      background-color: rgba(0, 255, 199, 0.5);
+    }
+    #copy{
+      background-color: rgba(255, 0, 199, 0.5);
+    }
+    input{
+      height: 20px;
+      width: 40px;
+    }
+    .result_part{
+      width: 500px;
+      height: 100%;
+      float: left;
+    }
+    #result{
+      width: 100%;
+      height: 500px;
+      outline:none;
+      resize:none;
+    }
+  </style>
+  <body style="height:100%">
+    <div class="main_part">
+      <div class="image">
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+        <div class="ball" data-value='0'></div>
+      </div>
+      <input type="text" id="text" value="" />&ensp;&ensp;
+      <div id="save">保存</div>&ensp;&ensp;
+      <div id="refresh">重置</div>&ensp;&ensp;
+      <div id="copy">复制</div><br>
+    </div>
+    <div class="result_part">
+      <textarea id="result" readonly></textarea>
+    </div>
+    <script type="text/javascript" src="./jquery-3.3.1.min.js"></script>
+    <script>
+      var result_array = new Array();
+      $('.ball').on('click',function () {
+        if(!$(this).data('value')){
+          $(this).addClass('onclick');
+          $(this).data('value',1);
+        }else{
+          $(this).removeClass('onclick');
+          $(this).data('value',0);
+        }
+      })
+      $('#refresh').on('click',reset);
+      function reset() {
+        $('.ball').data('value',0);
+        $('.ball').removeClass('onclick');
+      }
+      $('#save').on('click',function(){
+        let length = 5;
+        let mark_index = $('#text').val();
+        if( !mark_index && mark_index!== 0 ){
+          alert('请输入键值');
+          return;
+        }
+        let tmp = new Array();
+        $('.ball').each(function (index, el) {
+          let first_index = Math.floor(index/length);
+          let second_index = index%length;
+          if(!tmp[first_index]){
+            tmp[first_index] = new Array();
+          }
+          tmp[first_index][second_index] = $(this).data('value');
+        })
+        result_array[mark_index] = tmp;
+        $('#result').text(arrayToString(result_array,'matrix'));
+        reset();
+      })
+      function arrayToString(array,array_name) {
+        var string = 'var '+array_name+'=new Array();'+"\r\n";
+        for(var key of Object.keys(array)){
+          string+=array_name+'['+key+']=new Array();'+"\r\n";
+          for (var s_key of Object.keys(array[key])) {
+            string+=array_name+'['+key+']['+s_key+']=['+array[key][s_key].join(',')+'];'+"\r\n";
+          }
+        }
+        return string;
+      }
+      $("#copy").on('click',function (){
+        var copy_content= document.getElementById("result");
+        copy_content.select();
+        document.execCommand("Copy");
+        alert("已复制好，可贴粘。");
+      })
+    </script>
+  </body>
+</html>
